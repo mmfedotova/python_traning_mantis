@@ -3,6 +3,7 @@ from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.microsoft import IEDriverManager
 from fixture.session import SessionHelper
+from fixture.project_helper import ProjectHelper
 
 
 class Application:
@@ -18,6 +19,7 @@ class Application:
         self.wd.implicitly_wait(2)
         self.session = SessionHelper(self)
         self.base_url = base_url
+        self.project = ProjectHelper(self)
 
     def is_valid(self):
         try:
