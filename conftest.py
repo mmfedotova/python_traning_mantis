@@ -2,12 +2,27 @@ import json
 
 import pytest
 import json
+import jsonpickle
 import os.path
 import importlib
 from fixture.application import Application
 
 fixture = None
 target = None
+
+
+@pytest.fixture
+def app(request):
+    global fixture
+    global target
+    browser = request.config.getoption("--browser")
+    web_config = load_config(request.config.getoption("--target"))["web"]
+    admin_config = load_config(request.config.getoption("--target"))["webadmin"]
+    if fixture is None or not fixture.is_valid():
+        fixture = Application(browser=browser, base_url=web_config["baseUrl"])
+        fixture.session.login(username=admin_config["username"], password=admin_config["password"])
+    fixture.session.ensure_login(username=admin_config["username"])
+    return fixture
 
 
 def load_config(file):
@@ -17,17 +32,6 @@ def load_config(file):
         with open(config_file) as f:
             target = json.load(f)
     return target
-
-
-@pytest.fixture
-def app(request):
-    global fixture
-    global target
-    browser = request.config.getoption("--browser")
-    web_config = load_config(request.config.getoption("--target"))["web"]
-    if fixture is None or not fixture.is_valid():
-        fixture = Application(browser=browser, base_url=web_config["baseUrl"])
-    return fixture
 
 
 @pytest.fixture(scope="session", autouse=True)

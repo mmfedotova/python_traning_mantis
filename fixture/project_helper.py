@@ -9,13 +9,14 @@ class ProjectHelper:
 
     def open_manage_project_page(self):
         wd = self.wd
-        wd.find_element_by_link_text("Manage").click()
-        wd.find_element_by_link_text("Manage Projects").click()
+        if not wd.current_url.endswith("/manage_proj_page.php"):
+            wd.find_element_by_link_text("Manage").click()
+            wd.find_element_by_link_text("Manage Projects").click()
 
     def select_project(self, project):
         wd = self.app.wd
         self.open_manage_project_page()
-        wd.find_element_by_link_text(project.name[0]).click()
+        wd.find_element_by_link_text(project.name).click()
 
     def delete_project(self):
         wd = self.wd
@@ -23,21 +24,21 @@ class ProjectHelper:
         wd.find_element_by_xpath("//input[@value='Delete Project']").click()
         self.project_cache = None
 
-    def create_project(self):
+    def create_project(self, project):
         wd = self.wd
         wd.find_element_by_xpath("//input[@value='Create New Project']").click()
-        self.fill_project_form()
+        self.fill_project_form(project)
         wd.find_element_by_xpath("//input[@value='Add Project']").click()
         self.project_cache = None
 
-    def fill_project_form(self):
+    def fill_project_form(self, project):
         wd = self.wd
         wd.find_element_by_name("name").click()
         wd.find_element_by_name("name").clear()
-        wd.find_element_by_name("name").send_keys("New_project")
+        wd.find_element_by_name("name").send_keys(project.name)
         wd.find_element_by_name("status").click()
         Select(wd.find_element_by_name("status")).select_by_visible_text("stable")
-        wd.find_element_by_xpath("//option[@value='50']").click()
+        # wd.find_element_by_xpath("//select[@name ='status']").click()
         wd.find_element_by_name("inherit_global").click()
         wd.find_element_by_name("inherit_global").click()
         wd.find_element_by_name("view_state").click()
@@ -46,7 +47,7 @@ class ProjectHelper:
             "(.//*[normalize-space(text()) and normalize-space(.)='View Status'])[1]/following::option[2]").click()
         wd.find_element_by_name("description").click()
         wd.find_element_by_name("description").clear()
-        wd.find_element_by_name("description").send_keys("desc")
+        wd.find_element_by_name("description").send_keys(project.description)
 
     project_cache = None
 
@@ -63,3 +64,5 @@ class ProjectHelper:
                 self.project_cache.append(
                     Project(name=name, description=description))
         return list(self.project_cache)
+
+
