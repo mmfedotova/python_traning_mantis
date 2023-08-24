@@ -14,4 +14,6 @@ def test_create_project(app, json_project):
     assert len(old_projects) + 1 == len(new_projects)
     old_projects.append(project)
     # assert sorted(old_projects, key=Project.get_name) == sorted(old_projects, key=Project.get_name)
-    assert old_projects.sort() == new_projects.sort()
+    old_projects.sort()
+    new_projects.sort()
+    assert old_projects == new_projects

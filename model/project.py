@@ -14,10 +14,10 @@ class Project:
         return self.name == other.name and self.description == other.description
 
     def __lt__(self, other):
-        return self.name < other.name and self.description < other.description
+        return self.name < other.name
 
     def __gt__(self, other):
-        return self.name > other.name and self.description > other.description
+        return self.name > other.name
 
     def get_name(self):
         return str(self.name)
