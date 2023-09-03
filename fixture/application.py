@@ -4,10 +4,11 @@ from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.microsoft import IEDriverManager
 from fixture.session import SessionHelper
 from fixture.project_helper import ProjectHelper
+from fixture.soap import SoapHelper
 
 
 class Application:
-    def __init__(self, browser, base_url):
+    def __init__(self, browser, base_url, admin_config):
         if browser == "firefox":
             self.wd = webdriver.Firefox(executable_path=GeckoDriverManager().install())
         elif browser == "chrome":
@@ -19,7 +20,9 @@ class Application:
         self.wd.implicitly_wait(2)
         self.session = SessionHelper(self)
         self.base_url = base_url
+        self.admin_config = admin_config
         self.project = ProjectHelper(self)
+        self.soap = SoapHelper(self)
 
     def is_valid(self):
         try:
