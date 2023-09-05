@@ -7,7 +7,7 @@ from model.project import Project
 class SoapHelper:
     def __init__(self, app):
         self.app = app
-        self.client = Client("http://localhost/mantisbt-1.2.20/api/soap/mantisconnect.php?wsdl")
+        self.client = Client(app.base_url + "api/soap/mantisconnect.php?wsdl")
 
     def get_project_list(self):
         username = self.app.admin_config["username"]
